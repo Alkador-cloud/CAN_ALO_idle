@@ -1,0 +1,32 @@
+Theme : Drogue (inspiration Schedule one (jeu) / Breaking bad (série))
+On clique sur la plante pour la faire pousser et produire de la drogue
+(étapes : 1 Planter, 2 arroser, 3, laisser pousser, 4 ceuillir, 5 emballer, 6 vendre)
+Système d'amélioration de la production
+Système d'automatisation
+Système de quêtes/objectifs
+Système de succès
+Système de prestige/reset
+Système de bonus aléatoires
+Système de prix/fluctuation
+Système d'employés
+Plusieurs types de drogues à produire (Avec étapes propres)
+Système d'amélioration indirecte (ex: marketing, sécurité, etc)
+Système d'amélioration de setup (ex: serre, éclairage, irrigation, etc)
+de plus en plus de fonctions et d'options
+Système de statistiques détaillées
+Système de sauvegarde et de chargement
+Système de tutoriel interactif
+Système de notifications
+graphismes simples mais attrayants
+interface utilisateur intuitive
+jeu optimisé pour les performances
+logique de progression bien équilibrée
+musique et effets sonores immersifs
+récompenses régulières pour maintenir l'intérêt du joueur
+système de feedback visuel et sonore
+système de gestion des ressources
+Aides contextuelles
+variété dans les types de missions et d'objectifs
+zone de stockage pour les produits
+système de réputation
+système de défis quotidiens/hebdomadaires
