@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d126736a552d6a84588013534336b09b, type: 3}
+  m_Name: CropType_Cannabis
+  m_EditorClassIdentifier: Assembly-CSharp::IdleGame.CropType
+  cropName: Cannabis
+  sellPrice: 100
+  stageDurations:
+  - 5
+  - 5
+  - 10
+  - 5
+  - 5
+  - 2
