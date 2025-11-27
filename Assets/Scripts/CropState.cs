@@ -145,7 +145,7 @@ namespace IdleGame
                 ProductionStage.Planting => "Planter",
                 ProductionStage.Watering => "Arroser",
                 ProductionStage.Growing => "Pousser",
-                ProductionStage.Harvesting => "Cueillir",
+                ProductionStage.Harvesting => "Recolter",
                 ProductionStage.Packaging => "Emballer",
                 ProductionStage.Selling => "Vendre",
                 _ => "Inconnu"

@@ -14,8 +14,8 @@ Objectif 3 : Système monétaire
 •	[ ] T3.3 - Ajouter un multiplicateur de prix basé sur le type de drogue (future extensibilité)
 Objectif 4 : Interface utilisateur basique
 •	[ ] T4.1 - Créer un Canvas UI avec affichage du solde (TextMeshPro)
-•	[ ] T4.2 - Ajouter un indicateur de progression du cycle (barre/texte étape actuelle)
-•	[ ] T4.3 - Afficher le gain prévisuel à la vente
+• [ ] T4.2 - Ajouter un indicateur de progression du cycle (barre/texte étape actuelle)
+• [ ] T4.3 - Afficher l'argent possédé, ainsi que l'étape actuelle, le pourcentage de progression
 Objectif 5 : Système de sauvegarde/chargement
 •	[ ] T5.1 - Créer une classe GameData sérialisant l'état du jeu
 •	[ ] T5.2 - Implémenter un SaveManager utilisant JSON (ou PlayerPrefs)
