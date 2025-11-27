@@ -1,5 +1,6 @@
 # CAN_ALO_idle
 Priorités de développement - Jeu Idle
+---
 Objectif 1 : Système de base de clic
 •	[ ] T1.1 - Créer la scène principale du jeu avec un GameObject Plant
 •	[ ] T1.2 - Implémenter un script PlantClickHandler détectant les clics sur la plante
