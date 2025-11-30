@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d126736a552d6a84588013534336b09b, type: 3}
-  m_Name: CropType_Cannabis
+  m_Name: CropType_Marijuana
   m_EditorClassIdentifier: Assembly-CSharp::IdleGame.CropType
-  cropName: Cannabis
-  sellPrice: 50
+  cropName: Marijuana
+  sellPrice: 250
   stageDurations:
-  - 5
-  - 5
-  - 5
-  - 5
-  - 5
-  - 5
+  - 10
+  - 10
+  - 10
+  - 10
+  - 10
+  - 10

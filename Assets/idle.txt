@@ -1,39 +1,62 @@
 Priorités de développement - Jeu Idle
 Objectif 1 : Système de base de clic
-•	[ ] T1.1 - Créer la scène principale du jeu avec un GameObject Plant
-•	[ ] T1.2 - Implémenter un script PlantClickHandler détectant les clics sur la plante
-•	[ ] T1.3 - Ajouter un feedback visuel au clic (animation simple, changement de couleur)
+•	[x] T1.1 - Créer la scène principale du jeu avec un GameObject Plant
+•	[x] T1.2 - Implémenter un script PlantClickHandler détectant les clics sur la plante
+•	[x] T1.3 - Ajouter un feedback visuel au clic (animation simple, changement de couleur)
 Objectif 2 : Cycle de production (6 étapes)
-•	[ ] T2.1 - Créer un enum ProductionStage avec les 6 étapes : Planter, Arroser, Pousser, Cueillir, Emballer, Vendre
-•	[ ] T2.2 - Créer une classe CropState gère la progression dans le cycle
-•	[ ] T2.3 - Ajouter les timers pour chaque étape (durée de transition)
-•	[ ] T2.4 - Implémenter les transitions visuelles entre étapes (modèles/sprites)
+•	[x] T2.1 - Créer un enum ProductionStage avec les 6 étapes : Planter, Arroser, Pousser, Cueillir, Emballer, Vendre
+•	[x] T2.2 - Créer une classe CropState gère la progression dans le cycle
+•	[x] T2.3 - Ajouter les timers pour chaque étape (durée de transition)
+•	[x] T2.4 - Implémenter les transitions visuelles entre étapes (modèles/sprites)
 Objectif 3 : Système monétaire
-•	[ ] T3.1 - Créer une classe Currency pour gérer le solde du joueur
-•	[ ] T3.2 - Implémenter le calcul de revenu à l'étape Vendre
-•	[ ] T3.3 - Ajouter un multiplicateur de prix basé sur le type de drogue (future extensibilité)
+•	[x] T3.1 - Créer une classe Currency pour gérer le solde du joueur
+•	[x] T3.2 - Implémenter le calcul de revenu à l'étape Vendre
+•	[x] T3.3 - Ajouter un multiplicateur de prix basé sur le type de drogue (future extensibilité)
 Objectif 4 : Interface utilisateur basique
-•	[ ] T4.1 - Créer un Canvas UI avec affichage du solde (TextMeshPro)
-• [ ] T4.2 - Ajouter un indicateur de progression du cycle (barre/texte étape actuelle)
-• [ ] T4.3 - Afficher l'argent possédé, ainsi que l'étape actuelle, le pourcentage de progression
+•	[x] T4.1 - Créer un Canvas UI avec affichage du solde (TextMeshPro)
+• 	[x] T4.2 - Ajouter un indicateur de progression du cycle (barre/texte étape actuelle)
+• 	[x] T4.3 - Afficher l'argent possédé, ainsi que l'étape actuelle, le pourcentage de progression
 Objectif 5 : Système de sauvegarde/chargement
-•	[ ] T5.1 - Créer une classe GameData sérialisant l'état du jeu
-•	[ ] T5.2 - Implémenter un SaveManager utilisant JSON (ou PlayerPrefs)
-•	[ ] T5.3 - Charger les données au démarrage du jeu
-•	[ ] T5.4 - Sauvegarder automatiquement à chaque changement d'étape
+•	[x] T5.1 - Créer une classe GameData sérialisant l'état du jeu
+•	[x] T5.2 - Implémenter un SaveManager utilisant JSON (ou PlayerPrefs)
+•	[x] T5.3 - Charger les données au démarrage du jeu
+•	[x] T5.4 - Sauvegarder automatiquement à chaque changement d'étape
 Objectif 6 : Un seul type de drogue
-•	[ ] T6.1 - Créer un ScriptableObject CropType (Cannabis initial)
-•	[ ] T6.2 - Définir les propriétés : Duration, SellPrice, Name
-•	[ ] T6.3 - Lier la récolte actuelle à ce type unique
+•	[x] T6.1 - Créer un ScriptableObject CropType (Cannabis initial)
+•	[x] T6.2 - Définir les propriétés : Duration, SellPrice, Name
+•	[x] T6.3 - Lier la récolte actuelle à ce type unique
 ---
-Phase 2 : Progression et engagement
-Pour rendre le jeu addictif
-7.	Système d'expérience - Points XP par type de drogue
-8.	Système d'améliorations - Débloquer des bonus avec l'expérience
-9.	Système d'automatisation - Accélérer les étapes progressivement
-10.	Ajouter 2-3 types de drogues supplémentaires - Variété de gameplay
-11.	Système de notifications - Alerter le joueur des événements
-12.	Graphismes simples mais attrayants - Assets visuels de base
+Phase 2 : Progression et Engagement - Division en Tâches
+Objectif 7 : Système d'expérience
+•	[ ] T7.1 - Créer une classe ExperienceManager gerant les types d'XP par type de drogue, et gerant les type d'XP par niveau de compétence dans les différentes étapes de productions.
+•	[ ] T7.2 - Implémenter le gain d'1 XP à chaque complétion d'un cycle complet de production d'une drogue, et d'1XP à chaque complétion d'une étape de production.
+•	[ ] T7.3 - Créer un système de niveaux (seuils d'XP par niveau)
+•	[ ] T7.4 - Afficher XP/niveau dans l'UI (TextMeshPro)
+Objectif 8 : Système d'améliorations
+•	[ ] T8.1 - Créer une classe Upgrade et un enum UpgradeType (vitesse, prix, automatisation)
+•	[ ] T8.2 - Implémenter un UpgradeManager débloquant les bonus avec l'XP
+•	[ ] T8.3 - Ajouter un multiplicateur de vitesse sur les durées d'étapes
+•	[ ] T8.4 - Créer une UI d'améliorations avec boutons d'achat (coût en XP/devises)
+Objectif 9 : Système d'automatisation
+•	[ ] T9.1 - Créer un AutomationManager accélérant progressivement les étapes
+•	[ ] T9.2 - Implémenter l'automatisation par étape (Planter, Arroser, etc.)
+•	[ ] T9.3 - Ajouter des indicateurs visuels du niveau d'automatisation
+•	[ ] T9.4 - Intégrer la sauvegarde de l'état d'automatisation
+Objectif 10 : Variété de cultures (2-3 types supplémentaires)
+•	[ ] T10.1 - Créer 2 nouveaux CropType ScriptableObjects (ex: Pavot, Champignon)
+•	[ ] T10.2 - Implémenter un système de sélection de culture avant de planter
+•	[ ] T10.3 - Adapter les durées/prix selon le type choisi
+•	[ ] T10.4 - Ajouter une UI de sélection avec indicateurs de rentabilité
+Objectif 11 : Système de notifications
+•	[ ] T11.1 - Créer un NotificationManager (toast notifications)
+•	[ ] T11.2 - Implémenter les événements déclenchant des notifications (niveau gagné, upgrade débloqué, vente)
+•	[ ] T11.3 - Ajouter une file d'attente de notifications avec animation
+•	[ ] T11.4 - Intégrer des sons de notification (optionnel à ce stade)
+Objectif 12 : Graphismes simples mais attrayants
+•	[ ] T12.1 - Créer/importer des sprites pour chaque étape de production
+•	[ ] T12.2 - Ajouter des animations de transition entre étapes
+•	[ ] T12.3 - Styliser l'UI (couleurs, polices, icônes)
+•	[ ] T12.4 - Ajouter des effets visuels simples (particules, glow sur actions importantes)
 ---
 Phase 3 : Contenu additionnel
 Pour maintenir l'intérêt long terme

@@ -13,6 +13,7 @@ namespace IdleGame
         private ProductionStage currentStage = ProductionStage.Planting;
         private float stageTimer = 0f;
         private bool isProgressing = true;
+        private ExperienceManager experienceManager;
 
         public event Action<ProductionStage> OnStageChanged;
         public event Action OnStageDurationUpdated;
@@ -27,6 +28,11 @@ namespace IdleGame
         void Start()
         {
             InitializeStageDurations();
+            experienceManager = ExperienceManager.Instance;
+            if (cropType != null && experienceManager != null)
+            {
+                experienceManager.InitializeCrop(cropType.CropName);
+            }
             Debug.Log($"[CropState] Cycle commencé - Étape initiale: {GetStageName()}");
         }
 
@@ -55,11 +61,23 @@ namespace IdleGame
             }
             else
             {
+                // Gain d'XP à l'étape complétée (T7.2)
+                GainStageExperience();
+                
                 currentStage++;
                 stageTimer = 0f;
                 Debug.Log($"[CropState] Étape actuelle: {GetStageName()} | Progression: {ProgressionPercentage:P2}");
                 OnStageChanged?.Invoke(currentStage);
             }
+        }
+
+        private void GainStageExperience()
+        {
+            if (experienceManager == null || cropType == null)
+                return;
+
+            // Gain de 1 XP par étape complétée (T7.2)
+            experienceManager.GainStageXP(cropType.CropName, currentStage, 1);
         }
 
         public void IncreaseProgressManually()
@@ -104,6 +122,13 @@ namespace IdleGame
             double revenue = CalculateRevenue();
             currency.AddMoney(revenue);
             OnCropSold?.Invoke(revenue);
+            
+            // Gain d'XP pour cycle complet (T7.2)
+            if (experienceManager != null)
+            {
+                experienceManager.GainStageXP(cropType.CropName, ProductionStage.Selling, 1);
+            }
+            
             Debug.Log($"[CropState] Récolte vendue - Revenu: {revenue}");
         }
 
@@ -136,6 +161,32 @@ namespace IdleGame
                 stageDurations = new float[6] { 5f, 5f, 10f, 5f, 5f, 2f };
                 Debug.LogWarning("CropType non assigné. Utilisation des durées par défaut.", gameObject);
             }
+        }
+
+        public void LoadState(GameData data)
+        {
+            if (data == null)
+                return;
+
+            if (data.StageDurations != null && data.StageDurations.Length == stageDurations.Length)
+            {
+                stageDurations = (float[])data.StageDurations.Clone();
+            }
+            else
+            {
+                InitializeStageDurations();
+            }
+
+            int index = Mathf.Clamp(data.CurrentStageIndex, 0, stageDurations.Length - 1);
+            currentStage = (ProductionStage)index;
+
+            float maxDuration = stageDurations[index] > 0f ? stageDurations[index] : 0f;
+            stageTimer = Mathf.Clamp(data.StageTimer, 0f, maxDuration);
+
+            OnStageChanged?.Invoke(currentStage);
+            OnStageDurationUpdated?.Invoke();
+
+            Debug.Log($"[CropState] État chargé : étape={(ProductionStage)index}, elapsed={stageTimer:F2}s");
         }
 
         public string GetStageName()

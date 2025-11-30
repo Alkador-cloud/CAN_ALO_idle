@@ -5,9 +5,10 @@ namespace IdleGame
 {
     public class Currency : MonoBehaviour
     {
-        [SerializeField] private double initialBalance = 0f;
+        [SerializeField] private double initialBalance = 50.0;
 
         private double currentBalance;
+        private bool isInitialized;
 
         public event Action<double> OnBalanceChanged;
         public event Action<double> OnMoneyAdded;
@@ -16,8 +17,11 @@ namespace IdleGame
 
         void Start()
         {
-            currentBalance = initialBalance;
-            Debug.Log($"[Currency] Solde initial: {currentBalance}");
+            if (!isInitialized)
+            {
+                currentBalance = initialBalance;
+                Debug.Log($"[Currency] Solde initial: {currentBalance}");
+            }
         }
 
         public void AddMoney(double amount)
@@ -30,7 +34,7 @@ namespace IdleGame
 
             currentBalance += amount;
             Debug.Log($"[Currency] Argent ajouté: +{amount} | Nouveau solde: {currentBalance}");
-            
+
             OnMoneyAdded?.Invoke(amount);
             OnBalanceChanged?.Invoke(currentBalance);
         }
@@ -68,8 +72,15 @@ namespace IdleGame
             }
 
             currentBalance = amount;
+            isInitialized = true;
             Debug.Log($"[Currency] Solde défini à: {currentBalance}");
             OnBalanceChanged?.Invoke(currentBalance);
+        }
+
+        // Méthode publique demandée pour lire le solde
+        public double GetBalance()
+        {
+            return currentBalance;
         }
     }
 }

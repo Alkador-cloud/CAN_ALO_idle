@@ -8,13 +8,13 @@ public class PlantClickHandler : MonoBehaviour
     [SerializeField] private CropState cropState;
     [SerializeField] private Image plantImage;
     [SerializeField] private float clickFeedbackDuration = 0.25f;
-    [SerializeField] private Color clickFeedbackColor = Color.yellow;
+    [SerializeField] private Color clickFeedbackColor = Color.green;
     [SerializeField] private Button autoProgressToggleButton;
     [SerializeField] private TextMeshProUGUI autoProgressToggleButtonText;
 
     private Color originalColor;
     private Button plantButton;
-    private bool isAutoProgressEnabled = true;
+    private bool isAutoProgressEnabled = false;
 
     void Start()
     {
@@ -22,6 +22,9 @@ public class PlantClickHandler : MonoBehaviour
         SetupButton();
         SetupAutoProgressToggle();
         originalColor = plantImage.color;
+        // Ensure CropState starts with auto-progress disabled
+        if (cropState != null)
+            cropState.SetIsProgressing(isAutoProgressEnabled);
     }
 
     void Update()
