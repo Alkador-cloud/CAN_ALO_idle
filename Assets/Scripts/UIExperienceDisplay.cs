@@ -1,10 +1,20 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 using IdleGame;
 
 public class UIExperienceDisplay : MonoBehaviour
 {
+    [System.Serializable]
+    private class XPTypeDisplay
+    {
+        public XPType xpType;
+        public TextMeshProUGUI xpValueText;
+        public TextMeshProUGUI levelText;
+        public Image progressBar;
+    }
+
     [SerializeField] private CropState cropState;
     [SerializeField] private CropType cropType;
     
@@ -13,20 +23,23 @@ public class UIExperienceDisplay : MonoBehaviour
     [SerializeField] private TextMeshProUGUI totalLevelDisplay;
     [SerializeField] private Image totalXPProgressBar;
     
-    // Affichage XP par Étape
-    [SerializeField] private TextMeshProUGUI stageXPDisplay;
-    [SerializeField] private TextMeshProUGUI stageLevelDisplay;
-    [SerializeField] private Image stageXPProgressBar;
+    // Affichages par Type d'XP
+    [SerializeField] private List<XPTypeDisplay> xpTypeDisplays = new List<XPTypeDisplay>();
     
     private ExperienceManager experienceManager;
     private string currentCropName;
+    private float updateInterval = 0.5f;
+    private float timeSinceLastUpdate = 0f;
+    private Dictionary<XPType, XPTypeDisplay> xpDisplayMap = new Dictionary<XPType, XPTypeDisplay>();
 
     private void Start()
     {
         ValidateReferences();
         InitializeExperienceManager();
+        InitializeXPTypeDisplays();
         SubscribeToEvents();
         UpdateAllDisplays();
+        Debug.Log("[UIExperienceDisplay] Initialisation complÃ¨te");
     }
 
     private void OnDestroy()
@@ -34,25 +47,29 @@ public class UIExperienceDisplay : MonoBehaviour
         UnsubscribeFromEvents();
     }
 
+    private void Update()
+    {
+        timeSinceLastUpdate += Time.deltaTime;
+        if (timeSinceLastUpdate >= updateInterval)
+        {
+            UpdateAllDisplays();
+            timeSinceLastUpdate = 0f;
+        }
+    }
+
     private void ValidateReferences()
     {
         if (cropState == null)
-            Debug.LogError("CropState non assigné à UIExperienceDisplay", gameObject);
+            Debug.LogError("CropState non assignÃ© Ã  UIExperienceDisplay", gameObject);
         
         if (cropType == null)
-            Debug.LogError("CropType non assigné à UIExperienceDisplay", gameObject);
+            Debug.LogError("CropType non assignÃ© Ã  UIExperienceDisplay", gameObject);
         
         if (totalXPDisplay == null)
-            Debug.LogWarning("Total XP Display non assigné à UIExperienceDisplay", gameObject);
+            Debug.LogWarning("Total XP Display non assignÃ© Ã  UIExperienceDisplay", gameObject);
         
         if (totalLevelDisplay == null)
-            Debug.LogWarning("Total Level Display non assigné à UIExperienceDisplay", gameObject);
-        
-        if (stageXPDisplay == null)
-            Debug.LogWarning("Stage XP Display non assigné à UIExperienceDisplay", gameObject);
-        
-        if (stageLevelDisplay == null)
-            Debug.LogWarning("Stage Level Display non assigné à UIExperienceDisplay", gameObject);
+            Debug.LogWarning("Total Level Display non assignÃ© Ã  UIExperienceDisplay", gameObject);
     }
 
     private void InitializeExperienceManager()
@@ -60,12 +77,38 @@ public class UIExperienceDisplay : MonoBehaviour
         experienceManager = ExperienceManager.Instance;
         if (experienceManager == null)
         {
-            Debug.LogError("[UIExperienceDisplay] ExperienceManager non trouvé");
+            Debug.LogError("[UIExperienceDisplay] ExperienceManager non trouvÃ©");
             return;
         }
 
         currentCropName = cropType != null ? cropType.CropName : "Unknown";
         experienceManager.InitializeCrop(currentCropName);
+        Debug.Log($"[UIExperienceDisplay] Culture initialisÃ©e: {currentCropName}");
+    }
+
+    private void InitializeXPTypeDisplays()
+    {
+        xpDisplayMap.Clear();
+        
+        foreach (var xpDisplay in xpTypeDisplays)
+        {
+            if (xpDisplay != null)
+            {
+                xpDisplayMap[xpDisplay.xpType] = xpDisplay;
+                ValidateXPTypeDisplay(xpDisplay);
+            }
+        }
+
+        Debug.Log($"[UIExperienceDisplay] {xpDisplayMap.Count} affichages de types d'XP initialisÃ©s");
+    }
+
+    private void ValidateXPTypeDisplay(XPTypeDisplay display)
+    {
+        if (display.xpValueText == null)
+            Debug.LogWarning($"XP Value Text non assignÃ© pour {display.xpType}", gameObject);
+        
+        if (display.levelText == null)
+            Debug.LogWarning($"Level Text non assignÃ© pour {display.xpType}", gameObject);
     }
 
     private void SubscribeToEvents()
@@ -105,15 +148,17 @@ public class UIExperienceDisplay : MonoBehaviour
         if (cropName != currentCropName)
             return;
 
+        Debug.Log($"[UIExperienceDisplay] OnTotalXPGained: +{xpGained} XP");
         UpdateTotalXPDisplay();
     }
 
-    private void OnStageXPGained(string cropName, ProductionStage stage, int xpGained)
+    private void OnStageXPGained(string cropName, XPType xpType, int xpGained)
     {
         if (cropName != currentCropName)
             return;
 
-        UpdateStageXPDisplay();
+        Debug.Log($"[UIExperienceDisplay] OnStageXPGained: +{xpGained} XP pour {xpType}");
+        UpdateXPTypeDisplay(xpType);
     }
 
     private void OnTotalLevelUp(string cropName, int newLevel)
@@ -125,24 +170,26 @@ public class UIExperienceDisplay : MonoBehaviour
         Debug.Log($"[UIExperienceDisplay] {cropName} a atteint le niveau {newLevel}!");
     }
 
-    private void OnStageLevelUp(string cropName, ProductionStage stage, int newLevel)
+    private void OnStageLevelUp(string cropName, XPType xpType, int newLevel)
     {
         if (cropName != currentCropName)
             return;
 
-        UpdateStageXPDisplay();
-        Debug.Log($"[UIExperienceDisplay] {cropName} - {stage} a atteint le niveau {newLevel}!");
+        UpdateXPTypeDisplay(xpType);
+        Debug.Log($"[UIExperienceDisplay] {cropName} - {xpType} a atteint le niveau {newLevel}!");
     }
 
     private void OnCropStageChanged(ProductionStage newStage)
     {
-        UpdateStageXPDisplay();
+        Debug.Log($"[UIExperienceDisplay] Stage changÃ©: {newStage}");
+        XPType xpType = (XPType)newStage;
+        UpdateXPTypeDisplay(xpType);
     }
 
     private void UpdateAllDisplays()
     {
         UpdateTotalXPDisplay();
-        UpdateStageXPDisplay();
+        UpdateAllXPTypeDisplays();
     }
 
     private void UpdateTotalXPDisplay()
@@ -151,15 +198,18 @@ public class UIExperienceDisplay : MonoBehaviour
             return;
 
         var cropExp = experienceManager.GetCropExperience(currentCropName);
-        int xpToNext = experienceManager.GetXPToNextLevel(currentCropName, isStage: false);
         int totalThreshold = experienceManager.GetLevelThreshold(cropExp.TotalLevel + 1);
         int currentThreshold = experienceManager.GetLevelThreshold(cropExp.TotalLevel);
 
         if (totalXPDisplay != null)
-            totalXPDisplay.text = $"Total XP: {cropExp.TotalXP} / {totalThreshold}";
+        {
+            totalXPDisplay.text = $"XP Total: {cropExp.TotalXP} / {totalThreshold}";
+        }
 
         if (totalLevelDisplay != null)
+        {
             totalLevelDisplay.text = $"Niveau: {cropExp.TotalLevel}";
+        }
 
         if (totalXPProgressBar != null)
         {
@@ -169,27 +219,43 @@ public class UIExperienceDisplay : MonoBehaviour
         }
     }
 
-    private void UpdateStageXPDisplay()
+    private void UpdateAllXPTypeDisplays()
     {
-        if (experienceManager == null || cropState == null)
+        foreach (var xpType in xpDisplayMap.Keys)
+        {
+            UpdateXPTypeDisplay(xpType);
+        }
+    }
+
+    private void UpdateXPTypeDisplay(XPType xpType)
+    {
+        if (experienceManager == null || !xpDisplayMap.ContainsKey(xpType))
             return;
 
-        ProductionStage currentStage = cropState.CurrentStage;
-        var stageExp = experienceManager.GetStageExperience(currentCropName, currentStage);
-        int stageThreshold = experienceManager.GetLevelThreshold(stageExp.CurrentLevel + 1);
-        int stageCurrentThreshold = experienceManager.GetLevelThreshold(stageExp.CurrentLevel);
+        var display = xpDisplayMap[xpType];
+        var stageExp = experienceManager.GetStageExperience(currentCropName, xpType);
+        
+        int nextLevelThreshold = experienceManager.GetLevelThreshold(stageExp.CurrentLevel + 1);
+        int currentLevelThreshold = experienceManager.GetLevelThreshold(stageExp.CurrentLevel);
 
-        if (stageXPDisplay != null)
-            stageXPDisplay.text = $"{currentStage} XP: {stageExp.CurrentXP} / {stageThreshold}";
-
-        if (stageLevelDisplay != null)
-            stageLevelDisplay.text = $"Niv. {currentStage}: {stageExp.CurrentLevel}";
-
-        if (stageXPProgressBar != null)
+        // Mise Ã  jour du texte XP
+        if (display.xpValueText != null)
         {
-            float stageXpInLevel = stageExp.CurrentXP - stageCurrentThreshold;
-            float stageXpNeededForLevel = stageThreshold - stageCurrentThreshold;
-            stageXPProgressBar.fillAmount = stageXpNeededForLevel > 0 ? stageXpInLevel / stageXpNeededForLevel : 0f;
+            display.xpValueText.text = $"{xpType} XP: {stageExp.CurrentXP} / {nextLevelThreshold}";
+        }
+
+        // Mise Ã  jour du texte Niveau
+        if (display.levelText != null)
+        {
+            display.levelText.text = $"Niv. {xpType}: {stageExp.CurrentLevel}";
+        }
+
+        // Mise Ã  jour de la barre de progression
+        if (display.progressBar != null)
+        {
+            float xpInLevel = stageExp.CurrentXP - currentLevelThreshold;
+            float xpNeededForLevel = nextLevelThreshold - currentLevelThreshold;
+            display.progressBar.fillAmount = xpNeededForLevel > 0 ? xpInLevel / xpNeededForLevel : 0f;
         }
     }
 }

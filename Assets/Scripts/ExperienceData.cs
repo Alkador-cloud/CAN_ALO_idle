@@ -11,7 +11,7 @@ namespace IdleGame
         [Serializable]
         public class SerializedStageXP
         {
-            public int stage;
+            public int xpType;
             public int currentXP;
             public int currentLevel;
         }
@@ -37,7 +37,7 @@ namespace IdleGame
                 stageExperiences = kvp.Value.StageExperiences
                     .Select(s => new SerializedStageXP
                     {
-                        stage = (int)s.Key,
+                        xpType = (int)s.Key,
                         currentXP = s.Value.CurrentXP,
                         currentLevel = s.Value.CurrentLevel
                     })
@@ -59,8 +59,8 @@ namespace IdleGame
 
                 foreach (var stageData in cropData.stageExperiences)
                 {
-                    var stage = (ProductionStage)stageData.stage;
-                    cropExp.StageExperiences[stage] = new ExperienceManager.StageExperience
+                    var xpType = (XPType)stageData.xpType;
+                    cropExp.StageExperiences[xpType] = new ExperienceManager.StageExperience
                     {
                         CurrentXP = stageData.currentXP,
                         CurrentLevel = stageData.currentLevel

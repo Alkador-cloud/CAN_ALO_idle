@@ -28,15 +28,15 @@ namespace IdleGame
         {
             public int TotalXP;
             public int TotalLevel = 1;
-            public Dictionary<ProductionStage, StageExperience> StageExperiences = new();
+            public Dictionary<XPType, StageExperience> StageExperiences = new();
         }
 
         private Dictionary<string, CropExperience> cropExperiences = new();
 
         public event Action<string, int> OnTotalXPGained;
-        public event Action<string, ProductionStage, int> OnStageXPGained;
+        public event Action<string, XPType, int> OnStageXPGained;
         public event Action<string, int> OnLevelUp;
-        public event Action<string, ProductionStage, int> OnStageLevelUp;
+        public event Action<string, XPType, int> OnStageLevelUp;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void InitializeOnLoad()
@@ -69,9 +69,9 @@ namespace IdleGame
                 return;
 
             var cropExp = new CropExperience();
-            foreach (ProductionStage stage in System.Enum.GetValues(typeof(ProductionStage)))
+            foreach (XPType xpType in System.Enum.GetValues(typeof(XPType)))
             {
-                cropExp.StageExperiences[stage] = new StageExperience();
+                cropExp.StageExperiences[xpType] = new StageExperience();
             }
 
             cropExperiences[cropName] = cropExp;
@@ -80,13 +80,20 @@ namespace IdleGame
         /// Ajoute de l'XP à l'étape courante et au total.
         public void GainStageXP(string cropName, ProductionStage stage, int xpAmount)
         {
+            XPType xpType = (XPType)stage;
+            GainStageXP(cropName, xpType, xpAmount);
+        }
+
+        /// Ajoute de l'XP à l'étape courante (version surchargée avec XPType).
+        public void GainStageXP(string cropName, XPType xpType, int xpAmount)
+        {
             InitializeCrop(cropName);
             var cropExp = cropExperiences[cropName];
 
-            cropExp.StageExperiences[stage].CurrentXP += xpAmount;
-            OnStageXPGained?.Invoke(cropName, stage, xpAmount);
+            cropExp.StageExperiences[xpType].CurrentXP += xpAmount;
+            OnStageXPGained?.Invoke(cropName, xpType, xpAmount);
 
-            CheckStageLevelUp(cropName, stage);
+            CheckStageLevelUp(cropName, xpType);
 
             GainTotalXP(cropName, xpAmount);
         }
@@ -105,16 +112,16 @@ namespace IdleGame
         }
 
         /// Vérifie si l'étape a progressé de niveau.
-        private void CheckStageLevelUp(string cropName, ProductionStage stage)
+        private void CheckStageLevelUp(string cropName, XPType xpType)
         {
-            var stageExp = cropExperiences[cropName].StageExperiences[stage];
+            var stageExp = cropExperiences[cropName].StageExperiences[xpType];
             int nextThreshold = GetLevelThreshold(stageExp.CurrentLevel + 1);
 
             if (stageExp.CurrentXP >= nextThreshold)
             {
                 stageExp.CurrentLevel++;
-                OnStageLevelUp?.Invoke(cropName, stage, stageExp.CurrentLevel);
-                Debug.Log($"[ExperienceManager] {cropName} - {stage}: Niveau {stageExp.CurrentLevel}!");
+                OnStageLevelUp?.Invoke(cropName, xpType, stageExp.CurrentLevel);
+                Debug.Log($"[ExperienceManager] {cropName} - {xpType}: Niveau {stageExp.CurrentLevel}!");
             }
         }
 
@@ -142,14 +149,14 @@ namespace IdleGame
         }
 
         /// Obtient l'XP restant pour le prochain niveau.
-        public int GetXPToNextLevel(string cropName, bool isStage = false, ProductionStage stage = ProductionStage.Planting)
+        public int GetXPToNextLevel(string cropName, bool isStage = false, XPType xpType = XPType.Planting)
         {
             if (!cropExperiences.TryGetValue(cropName, out var cropExp))
                 return GetLevelThreshold(2);
 
             if (isStage)
             {
-                var stageExp = cropExp.StageExperiences[stage];
+                var stageExp = cropExp.StageExperiences[xpType];
                 int currentThreshold = GetLevelThreshold(stageExp.CurrentLevel);
                 int nextThreshold = GetLevelThreshold(stageExp.CurrentLevel + 1);
                 return Mathf.Max(0, nextThreshold - stageExp.CurrentXP);
@@ -170,10 +177,10 @@ namespace IdleGame
         }
 
         /// Obtient les données d'XP d'une étape.
-        public StageExperience GetStageExperience(string cropName, ProductionStage stage)
+        public StageExperience GetStageExperience(string cropName, XPType xpType)
         {
             InitializeCrop(cropName);
-            return cropExperiences[cropName].StageExperiences[stage];
+            return cropExperiences[cropName].StageExperiences[xpType];
         }
 
         /// Charge les données d'XP depuis GameData.
@@ -191,6 +198,23 @@ namespace IdleGame
             var data = new ExperienceData();
             data.SerializeCropExperiences(cropExperiences);
             return data;
+        }
+
+        /// Réinitialise toutes les données d'expérience.
+        public void ClearAllExperience()
+        {
+            cropExperiences.Clear();
+            Debug.Log("[ExperienceManager] Toutes les données d'expérience ont été réinitialisées.");
+        }
+
+        /// Réinitialise l'expérience d'une culture spécifique.
+        public void ClearCropExperience(string cropName)
+        {
+            if (cropExperiences.ContainsKey(cropName))
+            {
+                cropExperiences.Remove(cropName);
+                Debug.Log($"[ExperienceManager] Expérience de '{cropName}' réinitialisée.");
+            }
         }
     }
 }
