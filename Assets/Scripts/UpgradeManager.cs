@@ -36,6 +36,9 @@ namespace IdleGame
             }
 
             Instance = this;
+            
+            // Déplacer le GameObject à la racine avant d'appeler DontDestroyOnLoad
+            transform.SetParent(null, worldPositionStays: false);
             DontDestroyOnLoad(gameObject);
         }
 
@@ -144,6 +147,50 @@ namespace IdleGame
             return false;
         }
 
+        /// Définit le statut de déverrouillage d'une amélioration.
+        public void SetUpgradeUnlocked(string upgradeId, bool isUnlocked)
+        {
+            if (!upgradeMap.TryGetValue(upgradeId, out var entry))
+            {
+                Debug.LogWarning($"[UpgradeManager] Amélioration '{upgradeId}' non trouvée.");
+                return;
+            }
+
+            if (entry.isUnlocked == isUnlocked)
+                return;
+
+            entry.isUnlocked = isUnlocked;
+            entry.upgradeData.SetIsUnlocked(isUnlocked);
+
+            if (isUnlocked)
+                OnUpgradeUnlocked?.Invoke(upgradeId);
+
+            OnUpgradesUpdated?.Invoke();
+            Debug.Log($"[UpgradeManager] Amélioration '{upgradeId}' déverrouillée : {isUnlocked}");
+        }
+
+        /// Définit le statut d'achat d'une amélioration.
+        public void SetUpgradePurchased(string upgradeId, bool isPurchased)
+        {
+            if (!upgradeMap.TryGetValue(upgradeId, out var entry))
+            {
+                Debug.LogWarning($"[UpgradeManager] Amélioration '{upgradeId}' non trouvée.");
+                return;
+            }
+
+            if (entry.isPurchased == isPurchased)
+                return;
+
+            entry.isPurchased = isPurchased;
+            entry.upgradeData.SetIsPurchased(isPurchased);
+
+            if (isPurchased)
+                OnUpgradePurchased?.Invoke(upgradeId);
+
+            OnUpgradesUpdated?.Invoke();
+            Debug.Log($"[UpgradeManager] Amélioration '{upgradeId}' achetée : {isPurchased}");
+        }
+
         /// Achète une amélioration si possible.
         public bool PurchaseUpgrade(string upgradeId)
         {
@@ -173,6 +220,7 @@ namespace IdleGame
 
             currency.RemoveMoney(entry.upgradeData.Cost);
             entry.isPurchased = true;
+            entry.upgradeData.SetIsPurchased(true);
             OnUpgradePurchased?.Invoke(upgradeId);
             OnUpgradesUpdated?.Invoke();
 
@@ -193,6 +241,7 @@ namespace IdleGame
                 if (entry.upgradeData.AreAllConditionsMet())
                 {
                     entry.isUnlocked = true;
+                    entry.upgradeData.SetIsUnlocked(true);
                     OnUpgradeUnlocked?.Invoke(entry.upgradeData.UpgradeId);
                     anyChanged = true;
 
@@ -241,6 +290,8 @@ namespace IdleGame
             {
                 entry.isPurchased = false;
                 entry.isUnlocked = false;
+                entry.upgradeData.SetIsPurchased(false);
+                entry.upgradeData.SetIsUnlocked(false);
             }
 
             CheckUnlockedUpgrades();

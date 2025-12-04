@@ -45,5 +45,16 @@ namespace IdleGame
 
             return true;
         }
+
+        // Ajoute les méthodes manquantes pour corriger CS1061
+        public void SetIsPurchased(bool value)
+        {
+            isPurchased = value;
+        }
+
+        public void SetIsUnlocked(bool value)
+        {
+            isUnlocked = value;
+        }
     }
 }

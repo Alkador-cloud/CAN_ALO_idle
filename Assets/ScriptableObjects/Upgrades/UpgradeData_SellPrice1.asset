@@ -22,7 +22,7 @@ MonoBehaviour:
   bonusValue: 0.25
   buttonImage: {fileID: 6276729208924829371, guid: 145bd974b87eb4846919f98e1323bc2d, type: 3}
   conditions:
-  - conditionType: 1
+  - conditionType: 2
     cropName: Cannabis
     xpType: 5
     requiredValue: 5
