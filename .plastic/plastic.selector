@@ -1,4 +1,0 @@
-repository "CAN_ALO_idle/CAN_ALO_idle@20067523075634@cloud"
-  path "/"
-    br "/main"
-    co "/main"
