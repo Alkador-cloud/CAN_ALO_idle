@@ -28,15 +28,14 @@ Objectif 6 : Un seul type de drogue
 ---
 Phase 2 : Progression et Engagement - Division en Tâches
 Objectif 7 : Système d'expérience
-•	[ ] T7.1 - Créer une classe ExperienceManager gerant les types d'XP par type de drogue, et gerant les type d'XP par niveau de compétence dans les différentes étapes de productions.
-•	[ ] T7.2 - Implémenter le gain d'1 XP à chaque complétion d'un cycle complet de production d'une drogue, et d'1XP à chaque complétion d'une étape de production.
-•	[ ] T7.3 - Créer un système de niveaux (seuils d'XP par niveau)
-•	[ ] T7.4 - Afficher XP/niveau dans l'UI (TextMeshPro)
+•	[x] T7.1 - Créer une classe ExperienceManager gerant les types d'XP par type de drogue, et gerant les type d'XP par niveau de compétence dans les différentes étapes de productions.
+•	[x] T7.2 - Implémenter le gain d'1 XP à chaque complétion d'un cycle complet de production d'une drogue, et d'1XP à chaque complétion d'une étape de production.
+•	[x] T7.3 - Créer un système de niveaux (seuils d'XP par niveau)
+•	[x] T7.4 - Afficher XP/niveau dans l'UI (TextMeshPro)
 Objectif 8 : Système d'améliorations
-•	[ ] T8.1 - Créer une classe Upgrade et un enum UpgradeType (vitesse, prix, automatisation)
-•	[ ] T8.2 - Implémenter un UpgradeManager débloquant les bonus avec l'XP
-•	[ ] T8.3 - Ajouter un multiplicateur de vitesse sur les durées d'étapes
-•	[ ] T8.4 - Créer une UI d'améliorations avec boutons d'achat (coût en XP/devises)
+•	[ ] T8.1 - Créer une classe Upgrade et un enum UpgradeType (amélioration du pourcentage des cliques, prix de vente, automatisation, vitesse et puissance d'automatisation,...)
+•	[ ] T8.2 - Implémenter un UpgradeManager débloquant les bonus avec l'XP ou les niveaux, avec options dans unity inspector pour choisir la condition entre niveau et level et les différents types d'XP et de levels avec possiblitée de mettre plusieurs conditions. 
+•	[ ] T8.4 - Créer une UI d'améliorations avec boutons d'achat (coût en argent, bouton qui passent de gris à coloré quand conditions remplies)
 Objectif 9 : Système d'automatisation
 •	[ ] T9.1 - Créer un AutomationManager accélérant progressivement les étapes
 •	[ ] T9.2 - Implémenter l'automatisation par étape (Planter, Arroser, etc.)

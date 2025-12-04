@@ -11,7 +11,7 @@ namespace IdleGame
 
         [SerializeField] private int[] experienceLevelThresholds = new int[]
         {
-            0, 100, 250, 450, 700, 1000, 1350, 1750, 2200, 2700, 3250
+            0, 5, 15, 40, 100, 250, 750, 2000, 5000, 12500, 30000
         };
 
         /// Structure pour stocker l'XP d'une étape de production pour une culture.
