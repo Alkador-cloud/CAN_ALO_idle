@@ -16,12 +16,14 @@ namespace IdleGame
         private bool isInitialized = false;
 
         [System.Serializable]
-        private class UpgradeEntry
+        public class UpgradeEntry
         {
             public UpgradeData upgradeData;
             public bool isPurchased;
             public bool isUnlocked;
         }
+
+        [SerializeField] private List<UpgradeEntry> upgradeEntries = new();
 
         public event Action<string> OnUpgradeUnlocked;
         public event Action<string> OnUpgradePurchased;
@@ -90,12 +92,18 @@ namespace IdleGame
                     continue;
                 }
 
-                var entry = new UpgradeEntry
+                // Chercher l'entrée correspondante dans la liste sérialisée
+                var entry = upgradeEntries.Find(e => e.upgradeData == upgradeData);
+                if (entry == null)
                 {
-                    upgradeData = upgradeData,
-                    isPurchased = upgradeData.IsPurchased,
-                    isUnlocked = upgradeData.IsUnlocked
-                };
+                    entry = new UpgradeEntry
+                    {
+                        upgradeData = upgradeData,
+                        isPurchased = upgradeData.IsPurchased,
+                        isUnlocked = upgradeData.IsUnlocked
+                    };
+                    upgradeEntries.Add(entry);
+                }
 
                 upgradeMap[upgradeData.UpgradeId] = entry;
             }
@@ -116,6 +124,7 @@ namespace IdleGame
                 isUnlocked = false
             };
 
+            upgradeEntries.Add(entry);
             upgradeMap[upgrade.UpgradeId] = entry;
             Debug.Log($"[UpgradeManager] Amélioration '{upgrade.UpgradeId}' ajoutée dynamiquement.");
         }

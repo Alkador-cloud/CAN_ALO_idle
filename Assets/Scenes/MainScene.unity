@@ -4708,6 +4708,13 @@ MonoBehaviour:
   upgradeDataList:
   - {fileID: 11400000, guid: 7ee45c439024d7943a7e5d9ded24041f, type: 2}
   - {fileID: 11400000, guid: 1f02c484c4237f8478f571fe0716b6f9, type: 2}
+  upgradeEntries:
+  - upgradeData: {fileID: 11400000, guid: 7ee45c439024d7943a7e5d9ded24041f, type: 2}
+    isPurchased: 0
+    isUnlocked: 0
+  - upgradeData: {fileID: 11400000, guid: 1f02c484c4237f8478f571fe0716b6f9, type: 2}
+    isPurchased: 0
+    isUnlocked: 0
 --- !u!1 &1763018824
 GameObject:
   m_ObjectHideFlags: 0
