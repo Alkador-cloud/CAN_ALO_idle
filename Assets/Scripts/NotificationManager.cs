@@ -1,4 +1,4 @@
-Ôªøusing System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -26,7 +26,7 @@ namespace IdleGame
 
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            Debug.Log("[NotificationManager] Initialis√© avec succ√®s.");
+            Debug.Log("[NotificationManager] InitialisÈ avec succËs.");
         }
 
         private void OnEnable()
@@ -76,7 +76,7 @@ namespace IdleGame
             notificationUI.Initialize(data, () => RemoveNotification(notificationUI));
             activeNotifications.Add(notificationUI);
 
-            Debug.Log($"[NotificationManager] Notification affich√©e: {data.Message} ({data.Type})");
+            Debug.Log($"[NotificationManager] Notification affichÈe: {data.Message} ({data.Type})");
         }
 
         private void RemoveNotification(NotificationUI notificationUI)
@@ -104,14 +104,14 @@ namespace IdleGame
                 ExperienceManager.Instance.OnLevelUp -= OnLevelUp;
         }
 
-        private void OnUpgradeUnlocked(UpgradeConfig upgrade)
+        private void OnUpgradeUnlocked(UpgradeData upgrade)
         {
-            ShowNotification($"üîì Upgrade d√©bloqu√©: {upgrade.Name}", NotificationType.Success);
+            ShowNotification($"?? Upgrade dÈbloquÈ: {upgrade.DisplayName}", NotificationType.Success);
         }
 
-        private void OnLevelUp(int newLevel)
+        private void OnLevelUp(string cropName, int newLevel)
         {
-            ShowNotification($"‚≠ê Niveau {newLevel} atteint!", NotificationType.Success);
+            ShowNotification($"? {cropName} - Niveau {newLevel} atteint!", NotificationType.Success);
         }
     }
 

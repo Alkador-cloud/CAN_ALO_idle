@@ -60,6 +60,7 @@ Objectif 12 : Graphismes simples mais attrayants
 •	[ ] T12.2 - Ajouter des animations de transition entre étapes
 •	[ ] T12.3 - Styliser l'UI (couleurs, polices, icônes)
 •	[ ] T12.4 - Ajouter des effets visuels simples (particules, glow sur actions importantes)
+
 ---
 Phase 3 : Contenu additionnel
 Pour maintenir l'intérêt long terme

@@ -27,7 +27,7 @@ namespace IdleGame
 
         [SerializeField] private List<UpgradeEntry> upgradeEntries = new();
 
-        public event Action<string> OnUpgradeUnlocked;
+        public event Action<UpgradeData> OnUpgradeUnlocked;
         public event Action<string> OnUpgradePurchased;
         public event Action OnUpgradesUpdated;
 
@@ -206,7 +206,7 @@ namespace IdleGame
             entry.upgradeData.SetIsUnlocked(isUnlocked);
 
             if (isUnlocked)
-                OnUpgradeUnlocked?.Invoke(upgradeId);
+                OnUpgradeUnlocked?.Invoke(entry.upgradeData);
 
             OnUpgradesUpdated?.Invoke();
             Debug.Log($"[UpgradeManager] Amélioration '{upgradeId}' déverrouillée : {isUnlocked}");
@@ -289,7 +289,7 @@ namespace IdleGame
                 {
                     entry.isUnlocked = true;
                     entry.upgradeData.SetIsUnlocked(true);
-                    OnUpgradeUnlocked?.Invoke(entry.upgradeData.UpgradeId);
+                    OnUpgradeUnlocked?.Invoke(entry.upgradeData);
                     anyChanged = true;
 
                     Debug.Log($"[UpgradeManager] Amélioration '{entry.upgradeData.UpgradeId}' déverrouillée!");

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace IdleGame
 {
-    /// Gère l'expérience des joueurs par type de culture et par étape de production.
+    /// Gï¿½re l'expï¿½rience des joueurs par type de culture et par ï¿½tape de production.
     public class ExperienceManager : MonoBehaviour
     {
         public static ExperienceManager Instance { get; private set; }
@@ -14,7 +14,7 @@ namespace IdleGame
             0, 5, 15, 40, 100, 250, 750, 2000, 5000, 12500, 30000
         };
 
-        /// Structure pour stocker l'XP d'une étape de production pour une culture.
+        /// Structure pour stocker l'XP d'une ï¿½tape de production pour une culture.
         [System.Serializable]
         public class StageExperience
         {
@@ -22,7 +22,7 @@ namespace IdleGame
             public int CurrentLevel = 1;
         }
 
-        /// Structure pour stocker toutes les données d'XP d'une culture.
+        /// Structure pour stocker toutes les donnï¿½es d'XP d'une culture.
         [System.Serializable]
         public class CropExperience
         {
@@ -63,7 +63,7 @@ namespace IdleGame
             if (Instance == this) Instance = null;
         }
 
-        /// Initialise les données d'XP pour une culture.
+        /// Initialise les donnï¿½es d'XP pour une culture.
         public void InitializeCrop(string cropName)
         {
             if (cropExperiences.ContainsKey(cropName))
@@ -78,14 +78,14 @@ namespace IdleGame
             cropExperiences[cropName] = cropExp;
         }
 
-        /// Ajoute de l'XP à l'étape courante et au total.
+        /// Ajoute de l'XP ï¿½ l'ï¿½tape courante et au total.
         public void GainStageXP(string cropName, ProductionStage stage, int xpAmount)
         {
             XPType xpType = (XPType)stage;
             GainStageXP(cropName, xpType, xpAmount);
         }
 
-        /// Ajoute de l'XP à l'étape courante (version surchargée avec XPType).
+        /// Ajoute de l'XP ï¿½ l'ï¿½tape courante (version surchargï¿½e avec XPType).
         public void GainStageXP(string cropName, XPType xpType, int xpAmount)
         {
             InitializeCrop(cropName);
@@ -99,7 +99,7 @@ namespace IdleGame
             GainTotalXP(cropName, xpAmount);
         }
 
-        /// Ajoute de l'XP au total (lors de la complétion d'un cycle complet).
+        /// Ajoute de l'XP au total (lors de la complï¿½tion d'un cycle complet).
         private void GainTotalXP(string cropName, int xpAmount)
         {
             InitializeCrop(cropName);
@@ -108,11 +108,11 @@ namespace IdleGame
             cropExp.TotalXP += xpAmount;
             OnTotalXPGained?.Invoke(cropName, xpAmount);
 
-            // Vérifier les niveaux globaux
+            // Vï¿½rifier les niveaux globaux
             CheckTotalLevelUp(cropName);
         }
 
-        /// Vérifie si l'étape a progressé de niveau.
+        /// Vï¿½rifie si l'ï¿½tape a progressï¿½ de niveau.
         private void CheckStageLevelUp(string cropName, XPType xpType)
         {
             var stageExp = cropExperiences[cropName].StageExperiences[xpType];
@@ -126,7 +126,7 @@ namespace IdleGame
             }
         }
 
-        /// Vérifie si le niveau total a progressé.
+        /// Vï¿½rifie si le niveau total a progressï¿½.
         private void CheckTotalLevelUp(string cropName)
         {
             var cropExp = cropExperiences[cropName];
@@ -140,7 +140,7 @@ namespace IdleGame
             }
         }
 
-        /// Obtient le seuil d'XP pour un niveau donné.
+        /// Obtient le seuil d'XP pour un niveau donnï¿½.
         public int GetLevelThreshold(int level)
         {
             if (level <= 0) return 0;
@@ -170,21 +170,21 @@ namespace IdleGame
             }
         }
 
-        /// Obtient les données d'XP d'une culture.
+        /// Obtient les donnï¿½es d'XP d'une culture.
         public CropExperience GetCropExperience(string cropName)
         {
             InitializeCrop(cropName);
             return cropExperiences[cropName];
         }
 
-        /// Obtient les données d'XP d'une étape.
+        /// Obtient les donnï¿½es d'XP d'une ï¿½tape.
         public StageExperience GetStageExperience(string cropName, XPType xpType)
         {
             InitializeCrop(cropName);
             return cropExperiences[cropName].StageExperiences[xpType];
         }
 
-        /// Charge les données d'XP depuis GameData.
+        /// Charge les donnï¿½es d'XP depuis GameData.
         public void LoadExperienceData(ExperienceData expData)
         {
             if (expData == null)
@@ -193,7 +193,7 @@ namespace IdleGame
             cropExperiences = expData.DeserializeCropExperiences();
         }
 
-        /// Sauvegarde les données d'XP dans un format sérialisable.
+        /// Sauvegarde les donnï¿½es d'XP dans un format sï¿½rialisable.
         public ExperienceData SaveExperienceData()
         {
             var data = new ExperienceData();
@@ -201,34 +201,34 @@ namespace IdleGame
             return data;
         }
 
-        /// Réinitialise toutes les données d'expérience.
+        /// Rï¿½initialise toutes les donnï¿½es d'expï¿½rience.
         public void ClearAllExperience()
         {
             cropExperiences.Clear();
-            Debug.Log("[ExperienceManager] Toutes les données d'expérience ont été réinitialisées.");
+            Debug.Log("[ExperienceManager] Toutes les donnï¿½es d'expï¿½rience ont ï¿½tï¿½ rï¿½initialisï¿½es.");
         }
 
-        /// Réinitialise l'expérience d'une culture spécifique.
+        /// Rï¿½initialise l'expï¿½rience d'une culture spï¿½cifique.
         public void ClearCropExperience(string cropName)
         {
             if (cropExperiences.ContainsKey(cropName))
             {
                 cropExperiences.Remove(cropName);
-                Debug.Log($"[ExperienceManager] Expérience de '{cropName}' réinitialisée.");
+                Debug.Log($"[ExperienceManager] Expï¿½rience de '{cropName}' rï¿½initialisï¿½e.");
             }
         }
 
-        protected virtual void OnLevelUpEvent(int newLevel)
+        protected virtual void OnLevelUpEvent(string cropName, int newLevel)
         {
-            OnLevelUp?.Invoke(newLevel);
-            Debug.Log($"[ExperienceManager] Événement OnLevelUp déclenché - Niveau: {newLevel}");
+            OnLevelUp?.Invoke(cropName, newLevel);
+            Debug.Log($"[ExperienceManager] ï¿½vï¿½nement OnLevelUp dï¿½clenchï¿½ - Niveau: {newLevel}");
         }
 
-        // Dans la méthode où un upgrade est débloqué:
+        // Dans la mï¿½thode oï¿½ un upgrade est dï¿½bloquï¿½:
         private void UnlockUpgrade(UpgradeConfig upgrade)
         {
             OnUpgradeUnlocked?.Invoke(upgrade);
-            Debug.Log($"[UpgradeManager] Événement OnUpgradeUnlocked déclenché - {upgrade.Name}");
+            Debug.Log($"[UpgradeManager] ï¿½vï¿½nement OnUpgradeUnlocked dï¿½clenchï¿½ - {upgrade.displayName}");
         }
     }
 }
