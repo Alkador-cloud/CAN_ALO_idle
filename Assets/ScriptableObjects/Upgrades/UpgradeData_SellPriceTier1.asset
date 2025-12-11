@@ -10,21 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 70d2b9a540066a942862c057c17f1f73, type: 3}
-  m_Name: UpgradeData_SellPrice1
+  m_Name: UpgradeData_SellPriceTier1
   m_EditorClassIdentifier: Assembly-CSharp::IdleGame.UpgradeData
-  upgradeId: 2
+  upgradeId: 1
   upgradeType: 1
   displayName: Better refinement process
-  description: 'Better clients
+  description: 'Better clients.
 
     (+25% bonus on sell)'
-  cost: 250
-  bonusValue: 0.25
+  cost: 150
+  bonusValue: 0.5
   buttonImage: {fileID: 6276729208924829371, guid: 145bd974b87eb4846919f98e1323bc2d, type: 3}
   conditions:
-  - conditionType: 2
+  - conditionType: 1
     cropName: Cannabis
     xpType: 5
-    requiredValue: 5
+    requiredValue: 2
   isUnlocked: 0
   isPurchased: 0

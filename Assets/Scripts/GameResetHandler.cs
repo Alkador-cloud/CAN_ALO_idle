@@ -1,5 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering.VirtualTexturing;
 
 namespace IdleGame
 {
@@ -40,6 +42,7 @@ namespace IdleGame
                 return;
             }
 
+            SaveManager.Instance.ResetSave();
             SaveManager.Instance.ResetSave();
         }
     }

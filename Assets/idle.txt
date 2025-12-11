@@ -33,10 +33,13 @@ Objectif 7 : Système d'expérience
 •	[x] T7.3 - Créer un système de niveaux (seuils d'XP par niveau)
 •	[x] T7.4 - Afficher XP/niveau dans l'UI (TextMeshPro)
 Objectif 8 : Système d'améliorations
-•	[ ] T8.1 - Créer une classe Upgrade et un enum UpgradeType (amélioration du pourcentage des cliques, prix de vente, automatisation, vitesse et puissance d'automatisation,...)
-•	[ ] T8.2 - Implémenter un UpgradeManager débloquant les bonus avec l'XP ou les niveaux, avec options dans unity inspector pour choisir la condition entre niveau et level et les différents types d'XP et de levels avec possiblitée de mettre plusieurs conditions. 
-•	[ ] T8.3 - Créer un script configurable dans l'inspecteur unity qui aura pour but de configurer et paramètrer le débloquage des bonus, avec options dans unity inspector pour choisir la ou les conditions entre niveau et level et les différents types d'XP et de levels avec possiblitée de mettre plusieurs conditions. 
-•	[ ] T8.4 - Créer une UI d'améliorations avec boutons d'achat (coût en argent, bouton qui passent de gris à coloré quand conditions remplies)
+•	[x] T8.1 - Créer une classe Upgrade et un enum UpgradeType (amélioration du pourcentage des cliques, prix de vente, automatisation, vitesse et puissance d'automatisation,...)
+•	[x] T8.2 - Implémenter un UpgradeManager débloquant les bonus avec l'XP ou les niveaux,
+avec options dans unity inspector pour choisir la condition entre niveau et level et
+les différents types d'XP et de levels.
+•	[x] T8.3 - Créer un script configurable dans l'inspecteur unity qui aura pour but de configurer et paramètrer le débloquage des bonus,
+avec options dans unity inspector pour choisir la ou les conditions entre niveau et level et les différents types d'XP et de levels avec possiblitée de mettre plusieurs conditions. 
+•	[x] T8.4 - Créer une UI d'améliorations avec boutons d'achat (coût en argent, bouton qui passent de gris à coloré quand conditions remplies)
 Objectif 9 : Système d'automatisation
 •	[ ] T9.1 - Créer un AutomationManager accélérant progressivement les étapes
 •	[ ] T9.2 - Implémenter l'automatisation par étape (Planter, Arroser, etc.)

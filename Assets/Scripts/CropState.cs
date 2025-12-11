@@ -14,6 +14,7 @@ namespace IdleGame
         private float stageTimer = 0f;
         private bool isProgressing = true;
         private ExperienceManager experienceManager;
+        private UpgradeMultiplierManager upgradeMultiplierManager;
 
         public event Action<ProductionStage> OnStageChanged;
         public event Action OnStageDurationUpdated;
@@ -29,11 +30,33 @@ namespace IdleGame
         {
             InitializeStageDurations();
             experienceManager = ExperienceManager.Instance;
+            upgradeMultiplierManager = UpgradeMultiplierManager.Instance;
+            
             if (cropType != null && experienceManager != null)
             {
                 experienceManager.InitializeCrop(cropType.CropName);
             }
+            
+            if (upgradeMultiplierManager != null)
+            {
+                upgradeMultiplierManager.OnMultipliersUpdated += OnUpgradeMultipliersUpdated;
+            }
+            
             Debug.Log($"[CropState] Cycle commencé - Étape initiale: {GetStageName()}");
+        }
+
+        private void OnDestroy()
+        {
+            if (upgradeMultiplierManager != null)
+            {
+                upgradeMultiplierManager.OnMultipliersUpdated -= OnUpgradeMultipliersUpdated;
+            }
+        }
+
+        private void OnUpgradeMultipliersUpdated()
+        {
+            Debug.Log("[CropState] Multiplicateurs d'upgrade mis à jour");
+            OnStageDurationUpdated?.Invoke();
         }
 
         void Update()
@@ -85,19 +108,21 @@ namespace IdleGame
                 return;
             }
 
-            Debug.Log($"[CropState] Ajout de 1 XP - Crop: {cropType.CropName}, Stage: {currentStage} (XPType: {(XPType)currentStage})");
-            // Gain de 1 XP par étape complétée (T7.2)
-            experienceManager.GainStageXP(cropType.CropName, currentStage, 1);
+            // Appliquer le multiplicateur d'XP
+            int xpGain = Mathf.RoundToInt(1 * GetXPGainMultiplier());
+            Debug.Log($"[CropState] Ajout de {xpGain} XP - Crop: {cropType.CropName}, Stage: {currentStage} (XPType: {(XPType)currentStage})");
+            experienceManager.GainStageXP(cropType.CropName, currentStage, xpGain);
         }
 
         public void IncreaseProgressManually()
         {
             if (stageTimer < CurrentStageDuration)
             {
-                stageTimer += manualProgressIncrement * CurrentStageDuration;
+                float adjustedIncrement = manualProgressIncrement * GetClickPercentageMultiplier();
+                stageTimer += adjustedIncrement * CurrentStageDuration;
                 stageTimer = Mathf.Min(stageTimer, CurrentStageDuration);
                 
-                Debug.Log($"[CropState] Progression manuelle - Étape: {GetStageName()} | Progression: {ProgressionPercentage:P2}");
+                Debug.Log($"[CropState] Progression manuelle - Étape: {GetStageName()} | Progression: {ProgressionPercentage:P2} | Multiplicateur: {GetClickPercentageMultiplier()}");
 
                 if (stageTimer >= CurrentStageDuration)
                 {
@@ -134,10 +159,11 @@ namespace IdleGame
             OnCropSold?.Invoke(revenue);
             
             // Gain d'XP pour cycle complet (T7.2)
-            Debug.Log($"[CropState] SellCrop - Ajout de 1 XP pour Selling");
+            Debug.Log($"[CropState] SellCrop - Ajout d'XP pour Selling");
             if (experienceManager != null)
             {
-                experienceManager.GainStageXP(cropType.CropName, ProductionStage.Selling, 1);
+                int xpGain = Mathf.RoundToInt(1 * GetXPGainMultiplier());
+                experienceManager.GainStageXP(cropType.CropName, ProductionStage.Selling, xpGain);
             }
             
             Debug.Log($"[CropState] Récolte vendue - Revenu: {revenue}");
@@ -150,7 +176,26 @@ namespace IdleGame
 
         private float GetPriceMultiplier()
         {
-            return 1f;
+            if (upgradeMultiplierManager == null)
+                return 1f;
+            
+            return upgradeMultiplierManager.SellPriceMultiplier;
+        }
+
+        private float GetClickPercentageMultiplier()
+        {
+            if (upgradeMultiplierManager == null)
+                return 1f;
+            
+            return upgradeMultiplierManager.ClickPercentageMultiplier;
+        }
+
+        private float GetXPGainMultiplier()
+        {
+            if (upgradeMultiplierManager == null)
+                return 1f;
+            
+            return upgradeMultiplierManager.XPGainMultiplier;
         }
 
         public double GetEstimatedRevenue()

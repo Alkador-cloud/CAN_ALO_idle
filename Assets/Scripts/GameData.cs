@@ -19,5 +19,8 @@ namespace IdleGame
 
         // Données d'expérience (T7.1 - T7.3)
         public ExperienceData ExperienceData;
+
+        // Données d'améliorations (T8.1 - T8.2)
+        public UpgradesData UpgradesData;
     }
 }

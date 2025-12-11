@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -43,12 +44,35 @@ namespace IdleGame
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            TryLoadAndApply();
+            // Attendre que l'UpgradeManager soit initialisé avant de charger
+            if (UpgradeManager.Instance != null)
+            {
+                TryLoadAndApply();
+            }
+            else
+            {
+                StartCoroutine(WaitForUpgradeManagerAndLoad());
+            }
 
             var crop = UnityEngine.Object.FindFirstObjectByType<CropState>();
             if (crop != null)
             {
                 crop.OnStageChanged += OnCropStageChanged;
+            }
+        }
+
+        private System.Collections.IEnumerator WaitForUpgradeManagerAndLoad()
+        {
+            // Attendre 1 frame pour s'assurer que tous les Start() sont appelés
+            yield return null;
+            
+            if (UpgradeManager.Instance != null)
+            {
+                TryLoadAndApply();
+            }
+            else
+            {
+                Debug.LogWarning("[SaveManager] UpgradeManager introuvable après attente.");
             }
         }
 
@@ -70,6 +94,7 @@ namespace IdleGame
 
             var currency = UnityEngine.Object.FindFirstObjectByType<Currency>();
             var experienceManager = ExperienceManager.Instance;
+            var upgradeManager = UpgradeManager.Instance;
 
             var data = new GameData
             {
@@ -77,7 +102,8 @@ namespace IdleGame
                 StageTimer = crop.ElapsedTime,
                 StageDurations = null,
                 CurrencyBalance = currency != null ? currency.GetBalance() : 0.0,
-                ExperienceData = experienceManager != null ? experienceManager.SaveExperienceData() : null
+                ExperienceData = experienceManager != null ? experienceManager.SaveExperienceData() : null,
+                UpgradesData = upgradeManager != null ? SaveUpgradesData(upgradeManager) : null
             };
 
             try
@@ -143,6 +169,13 @@ namespace IdleGame
                 experienceManager.LoadExperienceData(data.ExperienceData);
                 Debug.Log("[SaveManager] Données d'expérience appliquées.");
             }
+
+            var upgradeManager = UpgradeManager.Instance;
+            if (upgradeManager != null && data.UpgradesData != null)
+            {
+                LoadUpgradesData(upgradeManager, data.UpgradesData);
+                Debug.Log("[SaveManager] Données d'améliorations appliquées.");
+            }
         }
 
         private void OnApplicationQuitting()
@@ -150,12 +183,10 @@ namespace IdleGame
             SaveNow();
         }
 
-        /// Réinitialise complètement la sauvegarde.
         public void ResetSave()
         {
             try
             {
-                // Réinitialiser les composants EN MÉMOIRE en premier
                 var experienceManager = ExperienceManager.Instance;
                 if (experienceManager != null)
                 {
@@ -189,14 +220,23 @@ namespace IdleGame
                     Debug.LogWarning("[SaveManager] Currency non trouvée pour reset.");
                 }
 
-                // Supprimer le fichier de sauvegarde APRÈS réinitialisation des variables
+                var upgradeManager = UpgradeManager.Instance;
+                if (upgradeManager != null)
+                {
+                    upgradeManager.ResetAllUpgrades();
+                    Debug.Log("[SaveManager] Améliorations réinitialisées.");
+                }
+                else
+                {
+                    Debug.LogWarning("[SaveManager] UpgradeManager non disponible pour reset.");
+                }
+
                 if (File.Exists(SaveFilePath))
                 {
                     File.Delete(SaveFilePath);
                     Debug.Log($"[SaveManager] Fichier de sauvegarde supprimé: {SaveFilePath}");
                 }
 
-                // Sauvegarder les données réinitialisées (état vierge)
                 SaveNow();
 
                 Debug.Log("[SaveManager] ✅ Sauvegarde complètement réinitialisée!");
@@ -207,7 +247,6 @@ namespace IdleGame
             }
         }
 
-        /// Affiche l'état actuel de la sauvegarde dans la console.
         public void PrintSaveState()
         {
             if (!Load(out var data))
@@ -231,10 +270,19 @@ namespace IdleGame
                     Debug.Log($"    Stages: {crop.stageExperiences.Length}");
                 }
             }
+
+            if (data.UpgradesData != null && data.UpgradesData.upgrades.Length > 0)
+            {
+                Debug.Log("\n  Améliorations:");
+                foreach (var upgrade in data.UpgradesData.upgrades)
+                {
+                    Debug.Log($"    {upgrade.upgradeId}: Achetée={upgrade.isPurchased}, Déverrouillée={upgrade.isUnlocked}");
+                }
+            }
+
             Debug.Log("==========================================");
         }
 
-        /// Modifie le solde dans la sauvegarde.
         public void SetBalance(double newBalance)
         {
             if (!Load(out var data))
@@ -254,7 +302,6 @@ namespace IdleGame
             Debug.Log($"[SaveManager] Solde modifié à: {newBalance}");
         }
 
-        /// Modifie l'étape de production dans la sauvegarde.
         public void SetStageIndex(int stageIndex)
         {
             if (!Load(out var data))
@@ -269,7 +316,6 @@ namespace IdleGame
             Debug.Log($"[SaveManager] Étape modifiée à: {(ProductionStage)data.CurrentStageIndex}");
         }
 
-        /// Réinitialise l'XP d'une culture spécifique.
         public void ResetCropExperience(string cropName)
         {
             var experienceManager = ExperienceManager.Instance;
@@ -293,6 +339,56 @@ namespace IdleGame
             {
                 Debug.LogError($"[SaveManager] Erreur lors de la sauvegarde: {ex}");
             }
+        }
+
+        private UpgradesData SaveUpgradesData(UpgradeManager upgradeManager)
+        {
+            var upgradesData = new UpgradesData();
+            upgradesData.SerializeUpgrades(upgradeManager.GetUpgradeMapForSerialization());
+            return upgradesData;
+        }
+
+        private void LoadUpgradesData(UpgradeManager upgradeManager, UpgradesData upgradesData)
+        {
+            // Debug détaillé du state
+            Debug.Log($"[SaveManager] UpgradeManager.IsInitialized = {upgradeManager.IsInitialized}");
+            Debug.Log($"[SaveManager] UpgradeManager.upgradeMapCount = {upgradeManager.GetUpgradeMapCount()}");
+            Debug.Log($"[SaveManager] UpgradeManager.GetAllUpgrades().Count = {upgradeManager.GetAllUpgrades().Count}");
+
+            var mapKeys = upgradeManager.GetUpgradeMapKeys();
+            Debug.Log($"[SaveManager] Clés du dictionnaire upgradeMap: {string.Join(", ", mapKeys.Select(k => $"'{k}'"))}");
+
+            var allUpgrades = upgradeManager.GetAllUpgrades();
+            Debug.Log($"[SaveManager] UpgradeDataList contient: {string.Join(", ", allUpgrades.Select(u => $"'{u.UpgradeId}'"))}");
+
+            var upgradeStates = upgradesData.DeserializeUpgrades();
+            Debug.Log($"[SaveManager] Sauvegarde contient {upgradeStates.Count} upgrades: {string.Join(", ", upgradeStates.Keys.Select(k => $"'{k}'"))}");
+
+            foreach (var kvp in upgradeStates)
+            {
+                string upgradeId = kvp.Key;
+                bool isPurchased = kvp.Value.isPurchased;
+                bool isUnlocked = kvp.Value.isUnlocked;
+
+                Debug.Log($"[SaveManager] Recherche upgrade '{upgradeId}' dans upgradeMap...");
+
+                var upgrade = upgradeManager.GetUpgrade(upgradeId);
+                if (upgrade == null)
+                {
+                    Debug.LogWarning($"[SaveManager] ❌ Amélioration '{upgradeId}' non trouvée dans upgradeMap!");
+                    continue;
+                }
+
+                Debug.Log($"[SaveManager] ✓ Amélioration '{upgradeId}' trouvée!");
+                upgradeManager.SetUpgradeUnlocked(upgradeId, isUnlocked);
+                
+                if (isPurchased)
+                {
+                    upgradeManager.SetUpgradePurchased(upgradeId, true);
+                }
+            }
+            
+            Debug.Log("[SaveManager] États d'amélioration restaurés depuis la sauvegarde.");
         }
     }
 }

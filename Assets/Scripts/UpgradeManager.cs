@@ -15,6 +15,8 @@ namespace IdleGame
         private Currency currency;
         private bool isInitialized = false;
 
+        public bool IsInitialized => isInitialized;
+
         [System.Serializable]
         public class UpgradeEntry
         {
@@ -129,9 +131,35 @@ namespace IdleGame
             Debug.Log($"[UpgradeManager] Amélioration '{upgrade.UpgradeId}' ajoutée dynamiquement.");
         }
 
+        /// Force l'initialisation du gestionnaire d'améliorations (appelé par SaveManager).
+        public void EnsureInitialized()
+        {
+            if (isInitialized)
+                return;
+
+            Debug.Log("[UpgradeManager] Forçage de l'initialisation des améliorations...");
+            InitializeUpgradesFromData();
+
+            currency = Currency.FindFirstObjectByType<Currency>();
+            if (currency == null)
+                Debug.LogError("[UpgradeManager] Currency non trouvé dans la scène!");
+
+            if (ExperienceManager.Instance != null)
+            {
+                ExperienceManager.Instance.OnLevelUp += (_, __) => CheckUnlockedUpgrades();
+                ExperienceManager.Instance.OnStageLevelUp += (_, _, __) => CheckUnlockedUpgrades();
+                ExperienceManager.Instance.OnTotalXPGained += (_, __) => CheckUnlockedUpgrades();
+                ExperienceManager.Instance.OnStageXPGained += (_, _, __) => CheckUnlockedUpgrades();
+            }
+
+            isInitialized = true;
+        }
+
         /// Obtient une amélioration par son ID.
         public UpgradeData GetUpgrade(string upgradeId)
         {
+            EnsureInitialized();
+            
             if (upgradeMap.TryGetValue(upgradeId, out var entry))
                 return entry.upgradeData;
 
@@ -141,6 +169,8 @@ namespace IdleGame
         /// Vérifie si une amélioration est déverrouillée.
         public bool IsUpgradeUnlocked(string upgradeId)
         {
+            EnsureInitialized();
+            
             if (upgradeMap.TryGetValue(upgradeId, out var entry))
                 return entry.isUnlocked;
 
@@ -150,6 +180,8 @@ namespace IdleGame
         /// Vérifie si une amélioration a été achetée.
         public bool IsUpgradePurchased(string upgradeId)
         {
+            EnsureInitialized();
+            
             if (upgradeMap.TryGetValue(upgradeId, out var entry))
                 return entry.isPurchased;
 
@@ -159,6 +191,8 @@ namespace IdleGame
         /// Définit le statut de déverrouillage d'une amélioration.
         public void SetUpgradeUnlocked(string upgradeId, bool isUnlocked)
         {
+            EnsureInitialized();
+            
             if (!upgradeMap.TryGetValue(upgradeId, out var entry))
             {
                 Debug.LogWarning($"[UpgradeManager] Amélioration '{upgradeId}' non trouvée.");
@@ -181,6 +215,8 @@ namespace IdleGame
         /// Définit le statut d'achat d'une amélioration.
         public void SetUpgradePurchased(string upgradeId, bool isPurchased)
         {
+            EnsureInitialized();
+            
             if (!upgradeMap.TryGetValue(upgradeId, out var entry))
             {
                 Debug.LogWarning($"[UpgradeManager] Amélioration '{upgradeId}' non trouvée.");
@@ -203,6 +239,8 @@ namespace IdleGame
         /// Achète une amélioration si possible.
         public bool PurchaseUpgrade(string upgradeId)
         {
+            EnsureInitialized();
+            
             if (!upgradeMap.TryGetValue(upgradeId, out var entry))
             {
                 Debug.LogWarning($"[UpgradeManager] Amélioration '{upgradeId}' non trouvée.");
@@ -265,12 +303,15 @@ namespace IdleGame
         /// Obtient toutes les améliorations.
         public List<UpgradeData> GetAllUpgrades()
         {
+            EnsureInitialized();
             return new List<UpgradeData>(upgradeDataList);
         }
 
         /// Obtient les améliorations déverrouillées.
         public List<UpgradeData> GetUnlockedUpgrades()
         {
+            EnsureInitialized();
+            
             var result = new List<UpgradeData>();
             foreach (var entry in upgradeMap.Values)
             {
@@ -283,6 +324,8 @@ namespace IdleGame
         /// Obtient les améliorations achetées.
         public List<UpgradeData> GetPurchasedUpgrades()
         {
+            EnsureInitialized();
+            
             var result = new List<UpgradeData>();
             foreach (var entry in upgradeMap.Values)
             {
@@ -295,6 +338,8 @@ namespace IdleGame
         /// Réinitialise tous les achats d'améliorations.
         public void ResetAllUpgrades()
         {
+            EnsureInitialized();
+            
             foreach (var entry in upgradeMap.Values)
             {
                 entry.isPurchased = false;
@@ -305,6 +350,27 @@ namespace IdleGame
 
             CheckUnlockedUpgrades();
             Debug.Log("[UpgradeManager] Toutes les améliorations ont été réinitialisées.");
+        }
+
+        /// Retourne la carte d'améliorations pour la sérialisation.
+        public Dictionary<string, UpgradeEntry> GetUpgradeMapForSerialization()
+        {
+            EnsureInitialized();
+            return new Dictionary<string, UpgradeEntry>(upgradeMap);
+        }
+
+        /// Retourne toutes les clés du dictionnaire (pour debug).
+        public List<string> GetUpgradeMapKeys()
+        {
+            EnsureInitialized();
+            return new List<string>(upgradeMap.Keys);
+        }
+
+        /// Retourne le nombre d'entrées dans le dictionnaire.
+        public int GetUpgradeMapCount()
+        {
+            EnsureInitialized();
+            return upgradeMap.Count;
         }
     }
 }
