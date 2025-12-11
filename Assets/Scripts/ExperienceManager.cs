@@ -37,6 +37,7 @@ namespace IdleGame
         public event Action<string, XPType, int> OnStageXPGained;
         public event Action<string, int> OnLevelUp;
         public event Action<string, XPType, int> OnStageLevelUp;
+        public event Action<UpgradeConfig> OnUpgradeUnlocked;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void InitializeOnLoad()
@@ -215,6 +216,19 @@ namespace IdleGame
                 cropExperiences.Remove(cropName);
                 Debug.Log($"[ExperienceManager] Expérience de '{cropName}' réinitialisée.");
             }
+        }
+
+        protected virtual void OnLevelUpEvent(int newLevel)
+        {
+            OnLevelUp?.Invoke(newLevel);
+            Debug.Log($"[ExperienceManager] Événement OnLevelUp déclenché - Niveau: {newLevel}");
+        }
+
+        // Dans la méthode où un upgrade est débloqué:
+        private void UnlockUpgrade(UpgradeConfig upgrade)
+        {
+            OnUpgradeUnlocked?.Invoke(upgrade);
+            Debug.Log($"[UpgradeManager] Événement OnUpgradeUnlocked déclenché - {upgrade.Name}");
         }
     }
 }
