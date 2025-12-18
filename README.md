@@ -1,8 +1,14 @@
+Jeu idle / clicker
+
 Jeu inspiré de Schedule One et Breaking bad.
 
 Avis actuel : J'arrive bien à réaliser les différentes méchaniques que je veut intégrer dans mon jeu, et grâce à ma planification je sais quoi faire et dans quel ordre.
 
+------
+
 Priorités de développement - Jeu Idle
+
+---
 
 Phase 1 : Boucle de gameplay brute
 
@@ -22,8 +28,8 @@ Objectif 3 : Système monétaire
 
 Objectif 4 : Interface utilisateur basique
 •	[x] T4.1 - Créer un Canvas UI avec affichage du solde (TextMeshPro)
-• [x] T4.2 - Ajouter un indicateur de progression du cycle (barre/texte étape actuelle)
-• [x] T4.3 - Afficher l'argent possédé, ainsi que l'étape actuelle et le pourcentage de progression
+• 	[x] T4.2 - Ajouter un indicateur de progression du cycle (barre/texte étape actuelle)
+• 	[x] T4.3 - Afficher l'argent possédé, ainsi que l'étape actuelle et le pourcentage de progression
 
 Objectif 5 : Système de sauvegarde/chargement
 •	[x] T5.1 - Créer une classe GameData sérialisant l'état du jeu
@@ -35,7 +41,9 @@ Objectif 6 : Un seul type de drogue
 •	[x] T6.1 - Créer un ScriptableObject CropType (Cannabis initial)
 •	[x] T6.2 - Définir les propriétés : Duration, SellPrice, Name
 •	[x] T6.3 - Lier la récolte actuelle à ce type unique
+
 ---
+
 Phase 2 : Progression et Engagement - Division en Tâches
 
 Objectif 7 : Système d'expérience
@@ -76,16 +84,19 @@ Objectif 12 : Graphismes simples mais attrayants
 •	[ ] T12.4 - Ajouter des effets visuels simples (particules, glow sur actions importantes)
 
 ---
+
 Phase 3 : Contenu additionnel
-Pour maintenir l'intérêt long terme
+
 13.	Système de quêtes/objectifs - Missions guidées
 14.	Système de succès - Badges et accomplissements
 15.	Système de défis quotidiens/hebdomadaires - Engagement régulier
 16.	Zone de stockage - Limite de ressources
 17.	Système de prix/fluctuation - Prix variables selon la demande
+    
 ---
+
 Phase 4 : Profondeur de gameplay
-Ajouter de la complexité stratégique
+
 18.	Système d'employés - Déléguer le travail
 19.	Améliorations indirectes - Marketing, sécurité, etc.
 20.	Améliorations de setup - Serre, éclairage, irrigation
@@ -93,9 +104,10 @@ Ajouter de la complexité stratégique
 22.	Système de statistiques détaillées - Tracking avancé
 23.	Tutoriel interactif - Apprentissage progressif
 24.	Aides contextuelles - Help en jeu
+	
 ---
 Phase 5 : Endgame et réplayabilité
-Pour les joueurs hardcore
+
 25.	Système de prestige/reset - Redémarrer avec des bonus permanents
 26.	Système de bonus aléatoires - Variabilité et surprise
 27.	Feedback visuel et sonore - Animations et effets
