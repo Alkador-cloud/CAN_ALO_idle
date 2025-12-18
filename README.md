@@ -50,8 +50,8 @@ avec options dans unity inspector pour choisir la ou les conditions entre niveau
 •	[x] T8.4 - Créer une UI d'améliorations avec boutons d'achat (coût en argent, bouton qui passent de gris à coloré quand conditions remplies)
 
 Objectif 9 : Système de notifications
-•	[ ] T11.1 - Créer un NotificationManager
-•	[ ] T11.2 - Implémenter les événements déclenchant des notifications (niveau gagné, upgrade débloqué, vente)
+•	[x] T11.1 - Créer un NotificationManager
+•	[~] T11.2 - Implémenter les événements déclenchant des notifications (niveau gagné, upgrade débloqué, vente)
 
 Objectif 10 : Système d'automatisation
 •	[ ] T9.1 - Créer un AutomationManager accélérant progressivement les étapes
