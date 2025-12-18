@@ -18,8 +18,8 @@ Objectif 3 : Système monétaire
 
 Objectif 4 : Interface utilisateur basique
 •	[x] T4.1 - Créer un Canvas UI avec affichage du solde (TextMeshPro)
-• 	[x] T4.2 - Ajouter un indicateur de progression du cycle (barre/texte étape actuelle)
-• 	[x] T4.3 - Afficher l'argent possédé, ainsi que l'étape actuelle, le pourcentage de progression
+• [x] T4.2 - Ajouter un indicateur de progression du cycle (barre/texte étape actuelle)
+• [x] T4.3 - Afficher l'argent possédé, ainsi que l'étape actuelle, le pourcentage de progression
 
 Objectif 5 : Système de sauvegarde/chargement
 •	[x] T5.1 - Créer une classe GameData sérialisant l'état du jeu
