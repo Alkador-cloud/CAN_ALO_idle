@@ -25,7 +25,11 @@ namespace IdleGame
             }
 
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            
+            // Obtenir le GameObject racine et le marquer
+            Transform rootTransform = transform.root;
+            DontDestroyOnLoad(rootTransform.gameObject);
+            
             Debug.Log("[NotificationManager] Initialisé avec succès.");
         }
 

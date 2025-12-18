@@ -1,2 +1,2 @@
 P = afficher experience dans la console
-n = reset xp et argent
+n = reset total (xp, argent, amélioration)

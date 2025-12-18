@@ -287,6 +287,7 @@ GameObject:
   - component: {fileID: 6526194244362725211}
   - component: {fileID: 5570966474122983082}
   - component: {fileID: 911528818876650396}
+  - component: {fileID: 3419768626272674385}
   m_Layer: 5
   m_Name: Notification Prefab
   m_TagString: Untagged
@@ -348,9 +349,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::IdleGame.NotificationUI
   messageText: {fileID: 7497524835695822606}
   backgroundImage: {fileID: 9059583628641764547}
-  canvasGroup: {fileID: 0}
-  fadeInDuration: 0.2
-  fadeOutDuration: 0.3
+  canvasGroup: {fileID: 3419768626272674385}
+  fadeInDuration: 0.33
+  fadeOutDuration: 0.33
+--- !u!225 &3419768626272674385
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3309249591471964743}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &4433851597090654553
 GameObject:
   m_ObjectHideFlags: 0
