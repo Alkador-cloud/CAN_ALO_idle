@@ -15,7 +15,9 @@ MonoBehaviour:
   upgradeId: 2
   upgradeType: 4
   displayName: Fast learning
-  description: Better, faster, stronger
+  description: 'Better, faster, stronger
+
+    (+100% xp points)'
   cost: 400
   bonusValue: 1
   buttonImage: {fileID: 6276729208924829371, guid: 145bd974b87eb4846919f98e1323bc2d, type: 3}
@@ -24,5 +26,5 @@ MonoBehaviour:
     cropName: Cannabis
     xpType: 5
     requiredValue: 10
-  isUnlocked: 0
-  isPurchased: 0
+  isUnlocked: 1
+  isPurchased: 1
