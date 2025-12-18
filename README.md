@@ -1,4 +1,10 @@
+Jeu inspiré de Schedule One et Breaking bad.
+
+Avis actuel : J'arrive bien à réaliser les différentes méchaniques que je veut intégrer dans mon jeu, et grâce à ma planification je sais quoi faire et dans quel ordre.
+
 Priorités de développement - Jeu Idle
+
+Phase 1 : Boucle de gameplay brute
 
 Objectif 1 : Système de base de clic
 •	[x] T1.1 - Créer la scène principale du jeu avec un GameObject Plant
@@ -8,8 +14,6 @@ Objectif 1 : Système de base de clic
 Objectif 2 : Cycle de production (6 étapes)
 •	[x] T2.1 - Créer un enum ProductionStage avec les 6 étapes : Planter, Arroser, Pousser, Cueillir, Emballer, Vendre
 •	[x] T2.2 - Créer une classe CropState gère la progression dans le cycle
-•	[x] T2.3 - Ajouter les timers pour chaque étape (durée de transition)
-•	[x] T2.4 - Implémenter les transitions visuelles entre étapes (modèles/sprites)
 
 Objectif 3 : Système monétaire
 •	[x] T3.1 - Créer une classe Currency pour gérer le solde du joueur
@@ -19,11 +23,11 @@ Objectif 3 : Système monétaire
 Objectif 4 : Interface utilisateur basique
 •	[x] T4.1 - Créer un Canvas UI avec affichage du solde (TextMeshPro)
 • [x] T4.2 - Ajouter un indicateur de progression du cycle (barre/texte étape actuelle)
-• [x] T4.3 - Afficher l'argent possédé, ainsi que l'étape actuelle, le pourcentage de progression
+• [x] T4.3 - Afficher l'argent possédé, ainsi que l'étape actuelle et le pourcentage de progression
 
 Objectif 5 : Système de sauvegarde/chargement
 •	[x] T5.1 - Créer une classe GameData sérialisant l'état du jeu
-•	[x] T5.2 - Implémenter un SaveManager utilisant JSON (ou PlayerPrefs)
+•	[x] T5.2 - Implémenter un SaveManager (données sauvegardées dans le dossier Appdata de l'utilisateur)
 •	[x] T5.3 - Charger les données au démarrage du jeu
 •	[x] T5.4 - Sauvegarder automatiquement à chaque changement d'étape
 
